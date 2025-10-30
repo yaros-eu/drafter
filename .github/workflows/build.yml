@@ -28,7 +28,7 @@ jobs:
           Invoke-PS2EXE "$PWD\drafter.ps1" "$PWD\drafter.exe"
 
       - name: Upload workflow artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: drafter
           path: drafter.exe
