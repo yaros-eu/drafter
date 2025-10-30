@@ -5,8 +5,6 @@ on:
   push:
     branches:
       - main
-  release:
-    types: [created]
 
 jobs:
   build:
@@ -32,11 +30,3 @@ jobs:
         with:
           name: drafter
           path: drafter.exe
-
-      - name: Upload EXE to GitHub Release
-        if: github.event_name == 'release'
-        uses: softprops/action-gh-release@v1
-        with:
-          files: drafter.exe
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
