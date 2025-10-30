@@ -1,0 +1,42 @@
+name: Build
+run-name: ${{ github.actor }} is building drafter.exe
+
+on:
+  push:
+    branches:
+      - main
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install PS2EXE module
+        shell: powershell
+        run: |
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module -Name PS2EXE -Scope CurrentUser -Force
+
+      - name: Build EXE
+        shell: powershell
+        run: |
+          Invoke-PS2EXE "$PWD\drafter.ps1" "$PWD\drafter.exe"
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: drafter
+          path: drafter.exe
+
+      - name: Upload EXE to GitHub Release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: drafter.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
